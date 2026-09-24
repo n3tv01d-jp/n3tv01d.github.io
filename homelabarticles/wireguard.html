@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building a Plex Media Server</title>
+    <title>Wireguard VPN Tunnel</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,9 +13,9 @@
         <div class="container">
             <a href="#" class="logo">Homelabbing</a>
             <nav>
-                <a href="#">Home</a>
+                <!--<a href="#">Home</a>
                 <a href="#">About Me</a>
-                <a href="#">Projects Archive</a>
+                <a href="#">Projects Archive</a> -->
             </nav>
         </div>
     </header>
@@ -23,7 +23,7 @@
     <!-- Hero Section (Article Banner) -->
     <section class="hero">
         <div class="container hero-content">
-            <h2>Building a Plex Media Server</h2>
+            <h2>Wireguard VPN Tunnel</h2>
             <!-- Article Meta Info -->
             <p style="color: var(--accent-color); margin-bottom: 1rem;">Written by N3TV01D | Published September 22, 2026</p>
         </div>
@@ -38,44 +38,43 @@
         <!-- Article Content -->
         <article class="card" style="max-width: 800px; margin: 0 auto;">
 
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of One Mini PC</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">A Nice Gift</h3>
 
-            <p> A few months ago, I decided I wanted to rewatch some of the anime I used to watch as a kid. My younger sisters boyfriend had setup a Plex Server in the past which looked pretty impressive so I decided that I should do the same.</p>
+            <p> A while ago, my neighbor gave me 2 knock-off Raspberry Pi's which he didn't know how to use. It were 2 RockPi 4B+ SBC's that had to be flashed in a very specific way that even the documentation on the official website didn't cover correctly and fully. This seemed like a fun challenge to me since I wanted to use at least one of them as a VPN so I could enter my network while I was somewhere else.</p>
 
-            <p>Utilizing a few docker containers you can build your very own local container network that is able to pull and stream TV series, movies and music, all neatly packed on 1 system using docker compose.</p>
+            <p>The most difficult part of setting up these RockPi's was the flashing of the emmc chips that are soldered onto the board. According to the documentation I should've been able to run anything from a microsd card but that didn't seem to be working. Setting up the VPN software itself was pretty easy since there is a project called PiVPN (which also works on non-Pi devices and inside docker containers). Today we will be looking at this FOSS Project and try to make it work.</p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The First Step</h3>
 
-            <p>The first step in any project is indexing what you need. We start off by installing docker using the correct method for your distribution of Linux which can be found on <a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a></p>
+            <p>After flashing the RockPi and configuring login credentials, locals and network we simply follow the one-line instructions from the official PiVPN website: <a href="https://www.pivpn.io/">https://www.pivpn.io/</a></p>
 
             <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
-                <em>Once docker has been installed we need the following packages: Deluge, Prowlarr, Sonarr, Radarr, Overseerr, Plex, Sabnzbd and Lidarr (optional for music). These packages exist on the Docker Hub and are being maintained by LinuxServer lscr.io</em>
+                <em>Make sure you give the device a static ip inside the router and forward the udp port 51820 on this device so you can connect from outside of your network.</em>
             </blockquote>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Installing all the packages</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Configuring the device</h3>
 
-            <p>Now that we've indexed what we need it is time to put it all together. Using a docker-compose.yml we are able to neatly package it all together and launch it as a cluster of containers</p>
+            <p>After executing the command <strong>curl -L https://install.pivpn.io | bash</strong> we are greeted by the installation screen. Here we want to configure the device to use Wireguard (which is in my opinion easier to use on mobile devices thanks to the Wireguard App). Having configured the software we can now enter <strong>pivpn -h</strong> inside the terminal to get a list of commands we can use. The most interesting ones for now are:</p>
 
             <ul style="margin: 1rem 0; padding-left: 2rem; color: var(--text-secondary)">
-                <li>A preview of the docker compose file can be found here: </li>
-                <li>Run the containers using the command <strong>sudo docker compose up -d --build</strong></li>
+                <li>pivpn -a (This is to add a client)</li>
+                <li>pivpn -qr (This will render a scannable QR code that you can scan with your phone using the Wireguard App to instantly create a connection)</li>
             </ul>
 
-            <p>The instant I turned it on, multiple locally hosted sites became accessible on the local ip and port, for example 192.168.178.225:8686.</p>
+            <!-- <p>The instant I turned it on, multiple locally hosted sites became accessible on the local ip and port, for example 192.168.178.225:8686.</p> -->
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Next Steps</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The Last Steps</h3>
 
-            <p>Now that we have the containers up and running there is only 1 thing to do: configuring all the containers by going to the ip of the machine followed by the port of the service. (These can be found in the docker-compose.yml)</p>
-            <p>Link all the containers together using the web interfaces, claim the server to an existing Plex Account and watch as much as you want.</p>
+            <p>Now that we have setup the VPN there is only 1 thing to do: test the connection.</p>
+            <p>Turn off the wifi on your mobile device (or connect to a different network) and turn on the Wireguard VPN. You can use websites like whatsmyip to see if everything is setup correctly.</p>
 
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
 
             <!-- Tags -->
             <div class="tags-container">
-                <span class="tag">Media</span>
                 <span class="tag">DIY</span>
                 <span class="tag">Linux</span>
-                <span class="tag">Docker</span>
+                <span class="tag">Networking</span>
             </div>
 
         </article>
