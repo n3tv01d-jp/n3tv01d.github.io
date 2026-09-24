@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building a Plex Media Server</title>
+    <title>AI Assistant using Ollama and Home Assistant</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,9 +13,9 @@
         <div class="container">
             <a href="#" class="logo">Homelabbing</a>
             <nav>
-                <a href="#">Home</a>
+                <!-- <a href="#">Home</a>
                 <a href="#">About Me</a>
-                <a href="#">Projects Archive</a>
+                <a href="#">Projects Archive</a> -->
             </nav>
         </div>
     </header>
@@ -23,7 +23,7 @@
     <!-- Hero Section (Article Banner) -->
     <section class="hero">
         <div class="container hero-content">
-            <h2>Building a Plex Media Server</h2>
+            <h2>AI Assistant using Ollama and Home Assistant</h2>
             <!-- Article Meta Info -->
             <p style="color: var(--accent-color); margin-bottom: 1rem;">Written by N3TV01D | Published September 22, 2026</p>
         </div>
@@ -38,35 +38,35 @@
         <!-- Article Content -->
         <article class="card" style="max-width: 800px; margin: 0 auto;">
 
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of One Mini PC</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">A Raspberry Pi and an AI Server</h3>
 
-            <p> A few months ago, I decided I wanted to rewatch some of the anime I used to watch as a kid. My younger sisters boyfriend had setup a Plex Server in the past which looked pretty impressive so I decided that I should do the same.</p>
+            <p> In the previously written article we installed an Ollama instance with a front-end interface. Today we are gonna hook that same Ollama instance up to an Home Assistant installation so we can speak to an AI assistant like Google's Gemini on an Android phone.</p>
 
-            <p>Utilizing a few docker containers you can build your very own local container network that is able to pull and stream TV series, movies and music, all neatly packed on 1 system using docker compose.</p>
+            <p>Utilizing a Raspberry Pi you can build your very own Home Assistant network that is able to activate and respond based on a wakeword. When this wakeword is triggered (For example "Hey Google" or "Okay Nabu") we can talk with the AI and it will respond back using the piper and whisper library's. Setting this up is a little more complicated than Odysseus from the previous article but it should still be a intermediary project that's quite easily done.</p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The First Step</h3>
 
-            <p>The first step in any project is indexing what you need. We start off by installing docker using the correct method for your distribution of Linux which can be found on <a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a></p>
+            <p>The first step is flashing Home Assistant to an SD Card. We start off by downloading the Raspberry Pi Imager with <strong>sudo apt install rpi-imager</strong> and then we flash the Home Assistant image to the SD Card.</p>
 
             <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
-                <em>Once docker has been installed we need the following packages: Deluge, Prowlarr, Sonarr, Radarr, Overseerr, Plex, Sabnzbd and Lidarr (optional for music). These packages exist on the Docker Hub and are being maintained by LinuxServer lscr.io</em>
+                <em>Once Home Assistant has been flashed to the SD Card we put the SD Card into the RPI 5 and connect an ethernet cable and power supply to it. After this we are able to visit the local ip of the device in a browser and configure the Home Assistant installation.</em>
             </blockquote>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Installing all the packages</h3>
 
-            <p>Now that we've indexed what we need it is time to put it all together. Using a docker-compose.yml we are able to neatly package it all together and launch it as a cluster of containers</p>
+            <p>Now we install the openwakeword, piper and whisper library's through the app section of the Home Assistant interface. We also download the Ollama integration and hook it up to the Ollama instance we installed on the AI Server.</p>
 
             <ul style="margin: 1rem 0; padding-left: 2rem; color: var(--text-secondary)">
-                <li>A preview of the docker compose file can be found here: </li>
-                <li>Run the containers using the command <strong>sudo docker compose up -d --build</strong></li>
+                <li>These intergrations might need a little bit of tinkering for them to work.</li>
+                <li>You can see the debug console for any errors in case something is not working as intended.</strong></li>
             </ul>
 
-            <p>The instant I turned it on, multiple locally hosted sites became accessible on the local ip and port, for example 192.168.178.225:8686.</p>
+            <p>At last we install the Home Assistant app on our phone and proceed to connect it to the Home Assistant server we are currently running.</p>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Next Steps</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Final Steps</h3>
 
-            <p>Now that we have the containers up and running there is only 1 thing to do: configuring all the containers by going to the ip of the machine followed by the port of the service. (These can be found in the docker-compose.yml)</p>
-            <p>Link all the containers together using the web interfaces, claim the server to an existing Plex Account and watch as much as you want.</p>
+            <p>We configure which model we want to use and what our wakeword will be. I choose for "Okay Nabu" due to personal preferences.</p>
+            <p>We are now able to call the AI with the wakeword we choose and proceed to ask it questions. With more integrations which we can install through the Home Assistant interface we can ask the AI what the weather will be like or what time it is and it will use the integrations to give us accurate information.</p>
 
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
 
