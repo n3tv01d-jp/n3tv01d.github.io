@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Running AI locally using Ollama</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Homelabbing</a>
+            <nav>
+                <!-- <a href="#">Home</a>
+                <a href="#">About Me</a>
+                <a href="#">Projects Archive</a> -->
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section (Article Banner) -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h2>Running AI locally using Ollama</h2>
+            <!-- Article Meta Info -->
+            <p style="color: var(--accent-color); margin-bottom: 1rem;">Written by N3TV01D | Published September 22, 2026</p>
+        </div>
+    </section>
+
+    <!-- Main Content - Article -->
+    <main class="container">
+
+        <!-- Image Placeholder (using CSS gradient instead for simplicity) -->
+        <div style="width: 100%; height: 250px; background: linear-gradient(135deg, var(--bg-card), var(--primary-color)); border-radius: 12px; margin-bottom: 2rem;"></div>
+
+        <!-- Article Content -->
+        <article class="card" style="max-width: 800px; margin: 0 auto;">
+
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Freedom of Local AI</h3>
+
+            <p>Almost everyone uses AI today. Having ChatGPT installed on their phone, using Siri or Gemini on their Apple or Android device, even when googling something you get an automated response from an AI. The thing with these corporate AI's is that they keep all of your data. What you've been asking, account details, IP logging etc. I do not like this one bit so I decided it was time to build my own locally running AI machine.</p>
+
+            <p>With a lot of spare parts I still had laying around my house I was able to build a pc with 16GB of ram, a 6 core 12 threads processor and a dual RTX 3060 GPU setup. I installed a 500GB NVME drive with Ubuntu Server and installed the NVIDIA drivers. Now it was time to really get this thing going.</p>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The First Step: Ollama</h3>
+
+            <p>The first step is installing Ollama. We can do this with a one-line command that can be found on the official website <a href="https://ollama.com/download">ollama.com/download</a></p>
+
+            <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
+                <em>This is a mostly automated process so it won't need a lot of configuration. But using Ollama from just the terminal doesn't look very nice.</em>
+            </blockquote>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Installing a front-end interface</h3>
+
+            <p>Ollama itself is just a piece of software that can be run from the terminal but I want it to look nice. YouTuber PewDiePie has a github repo with a nice looking interface that is currently being maintained by a large community. The interface may be vibecoded but if we keep it local without it touching the internet it should be safe (referring to the Wireguard Setup so we can still access it from outside the network)</p>
+
+            <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
+                <em>The github repo has a nice and quick install guide on the mainpage that makes this process surprisingly simple and easy which can be found <a href="https://github.com/odysseus-dev/odysseus">here</a></em>
+            </blockquote>
+
+            <p>For the installation of the Odysseus front-end we will need docker. For an easy install based on your distro of choosing I refer to the docker install guide <a href="https://docs.docker.com/engine/install/">here</a></p>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Final Steps</h3>
+
+            <p>Create a user account on the local web interface for Odysseus and inside the settings link the existing Ollama instance.</p>
+            <p>Now we can pull (abliterated) models from HuggingFace inside Ollama and they will automatically show up in the Odysseus interface. Be responsible however!</p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+
+            <!-- Tags -->
+            <div class="tags-container">
+                <span class="tag">AI</span>
+                <span class="tag">DIY</span>
+                <span class="tag">Linux</span>
+                <span class="tag">Docker</span>
+            </div>
+
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>It compiles on my machine—which is great, because I’m deleting my local repository in five minutes.</p>
+    </footer>
+
+</body>
+</html>
