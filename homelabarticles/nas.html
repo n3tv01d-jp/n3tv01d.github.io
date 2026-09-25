@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building a Plex Media Server</title>
+    <title>Building a Network Attached Storage with Samba</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,9 +13,9 @@
         <div class="container">
             <a href="#" class="logo">Homelabbing</a>
             <nav>
-                <a href="#">Home</a>
+                <!-- <a href="#">Home</a>
                 <a href="#">About Me</a>
-                <a href="#">Projects Archive</a>
+                <a href="#">Projects Archive</a> -->
             </nav>
         </div>
     </header>
@@ -23,7 +23,7 @@
     <!-- Hero Section (Article Banner) -->
     <section class="hero">
         <div class="container hero-content">
-            <h2>Building a Plex Media Server</h2>
+            <h2>Building a Network Attached Storage with Samba</h2>
             <!-- Article Meta Info -->
             <p style="color: var(--accent-color); margin-bottom: 1rem;">Written by N3TV01D | Published September 22, 2026</p>
         </div>
@@ -38,35 +38,42 @@
         <!-- Article Content -->
         <article class="card" style="max-width: 800px; margin: 0 auto;">
 
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of One Mini PC</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">Backups backups and even more backups</h3>
 
-            <p> A few months ago, I decided I wanted to rewatch some of the anime I used to watch as a kid. My younger sisters boyfriend had setup a Plex Server in the past which looked pretty impressive so I decided that I should do the same.</p>
+            <p>Having a cloud server is nice for backups of all different kinds. Something that functions like a cloud service but without a lot of the nonsense is a NAS (Network Attached Storage). I want to make my own (instead of spending God knows how much money) so I can easily transfer files between multiple desktops and laptops. With the <a href="wireguard.html">WireguardVPN</a> I am even able to access my NAS from outside my network.</p>
 
-            <p>Utilizing a few docker containers you can build your very own local container network that is able to pull and stream TV series, movies and music, all neatly packed on 1 system using docker compose.</p>
+            <p>The main reason for me having a NAS would be to transfer all of my fully rendered music to a Windows desktop so I can edit music videos. Most software these days is strictly released on Windows and Apple products, not linux. I managed to get FL Studio running inside of Wine (Linux Windows Compatibility Layer) but things like Sony Vegas and Adobe After Effects don't seem to work unfortunately.</p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The First Step</h3>
 
-            <p>The first step in any project is indexing what you need. We start off by installing docker using the correct method for your distribution of Linux which can be found on <a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a></p>
+            <p>Today we are building a NAS on an Arch Linux installation due to its low resource usage. We start by installing samba with the command <strong>sudo pacman -S samba</strong></p>
 
             <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
-                <em>Once docker has been installed we need the following packages: Deluge, Prowlarr, Sonarr, Radarr, Overseerr, Plex, Sabnzbd and Lidarr (optional for music). These packages exist on the Docker Hub and are being maintained by LinuxServer lscr.io</em>
+                <em>Now we have to enable the service using <strong>sudo systemctl enable --now smb</strong>.</em>
+                <em>After that we copy the default configuration using <strong>sudo cp /etc/samba/smb.conf.default /etc/samba/smb.conf</strong></em>
             </blockquote>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Installing all the packages</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Mounting a Drive</h3>
 
-            <p>Now that we've indexed what we need it is time to put it all together. Using a docker-compose.yml we are able to neatly package it all together and launch it as a cluster of containers</p>
+            <p>The main drive that hosts the Arch Linux OS only has 120GB of space. This is waaaaaay to little for the nearly 700GB of music projects that I currently have.</p>
+            <p>With <strong>lsblk</strong> I can see what other drives are installed inside the system. I connected 2 drives, a 1TB drive and a 500GB drive.</p>
 
             <ul style="margin: 1rem 0; padding-left: 2rem; color: var(--text-secondary)">
-                <li>A preview of the docker compose file can be found here: </li>
-                <li>Run the containers using the command <strong>sudo docker compose up -d --build</strong></li>
+                <li>I have a drive named sdb (the terrabyte drive) which I mounted on /samba</li>
+                <li>The second drive is sdc1 which is mounted on the /samba2 folder</li>
             </ul>
 
-            <p>The instant I turned it on, multiple locally hosted sites became accessible on the local ip and port, for example 192.168.178.225:8686.</p>
+            <p>We also need to make a username and password which can be done through the following commands:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem; color: var(--text-secondary)">
+                <li>sudo useradd -m username</li>
+                <li>sudo smbpasswd -a username</li>
+                <li>sudo smbpasswd -e username</li>
+                <li>Replace the word username with the username you want to use ofcourse</li>
+            </ul>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Next Steps</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Final Steps</h3>
 
-            <p>Now that we have the containers up and running there is only 1 thing to do: configuring all the containers by going to the ip of the machine followed by the port of the service. (These can be found in the docker-compose.yml)</p>
-            <p>Link all the containers together using the web interfaces, claim the server to an existing Plex Account and watch as much as you want.</p>
+            <p>Now all we have to do is mount the NAS to our main system. In the file explorer of your operating system you can connect through the network tab. In my case I connect to smb://192.168.178.205. Now I enter my username and password and I am good to go.</p>
 
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
 
@@ -75,7 +82,7 @@
                 <span class="tag">Media</span>
                 <span class="tag">DIY</span>
                 <span class="tag">Linux</span>
-                <span class="tag">Docker</span>
+                <span class="tag">Network</span>
             </div>
 
         </article>
