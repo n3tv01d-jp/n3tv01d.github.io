@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building a Plex Media Server</title>
+    <title>Nextcloud Self-Hosted Cloud Solution</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,9 +13,9 @@
         <div class="container">
             <a href="#" class="logo">Homelabbing</a>
             <nav>
-                <a href="#">Home</a>
+                <!-- <a href="#">Home</a>
                 <a href="#">About Me</a>
-                <a href="#">Projects Archive</a>
+                <a href="#">Projects Archive</a> -->
             </nav>
         </div>
     </header>
@@ -23,7 +23,7 @@
     <!-- Hero Section (Article Banner) -->
     <section class="hero">
         <div class="container hero-content">
-            <h2>Building a Plex Media Server</h2>
+            <h2>Nextcloud Self-Hosted Cloud Solution</h2>
             <!-- Article Meta Info -->
             <p style="color: var(--accent-color); margin-bottom: 1rem;">Written by N3TV01D | Published September 22, 2026</p>
         </div>
@@ -38,35 +38,30 @@
         <!-- Article Content -->
         <article class="card" style="max-width: 800px; margin: 0 auto;">
 
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of One Mini PC</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of Prepackaged Installations</h3>
 
-            <p> A few months ago, I decided I wanted to rewatch some of the anime I used to watch as a kid. My younger sisters boyfriend had setup a Plex Server in the past which looked pretty impressive so I decided that I should do the same.</p>
+            <p>I like to have my files backed up somewhere safe, just in case of anything going wrong (especially my FL Studio projects). Apps like Dropbox, Google Drive and Mega.co.nz are great but I don't trust my data on someone else their computer. The cloud sounds so magical but your data is still in someone's possession. Today I am going to fix that</p>
 
-            <p>Utilizing a few docker containers you can build your very own local container network that is able to pull and stream TV series, movies and music, all neatly packed on 1 system using docker compose.</p>
+            <p>I have tried installing Nextcloud in a couple different ways, none worked except for one. When installing Ubuntu Server for the first time I noticed Nextcloud being available for installation, which did seem to work for me. I don't know why or how but any other method didn't seem to work even hours after troubleshooting.</p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The First Step</h3>
 
-            <p>The first step in any project is indexing what you need. We start off by installing docker using the correct method for your distribution of Linux which can be found on <a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a></p>
+            <p>When configuring the Ubuntu Server install we are able to select the (presumably snap) package for Nextcloud. Selecting this package automates the install and takes away a lot of the headache you would have trying to manually install it.</a></p>
 
-            <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
-                <em>Once docker has been installed we need the following packages: Deluge, Prowlarr, Sonarr, Radarr, Overseerr, Plex, Sabnzbd and Lidarr (optional for music). These packages exist on the Docker Hub and are being maintained by LinuxServer lscr.io</em>
-            </blockquote>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Configuring Nextcloud</h3>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Installing all the packages</h3>
-
-            <p>Now that we've indexed what we need it is time to put it all together. Using a docker-compose.yml we are able to neatly package it all together and launch it as a cluster of containers</p>
+            <p>Once Ubuntu Server is done installing (including the prepackaged Nextcloud installation) we can browse to the web interface on a different computer. The web interface is being hosted on the device's local ip and port 80.</p>
 
             <ul style="margin: 1rem 0; padding-left: 2rem; color: var(--text-secondary)">
-                <li>A preview of the docker compose file can be found here: </li>
-                <li>Run the containers using the command <strong>sudo docker compose up -d --build</strong></li>
+                <li>You need to create an admin account on first startup.</li>
+                <li>And then everyting just works, its that simple.</li>
             </ul>
 
-            <p>The instant I turned it on, multiple locally hosted sites became accessible on the local ip and port, for example 192.168.178.225:8686.</p>
+            <p>There are also plugins you can install from the admin menu which comes in pretty handy. I have backup all of my music projects including the rendered wav and mp3 files. With the music plugin I can play everything straight from the "cloud".</p>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Next Steps</h3>
+            <!-- <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Next Steps</h3> -->
 
-            <p>Now that we have the containers up and running there is only 1 thing to do: configuring all the containers by going to the ip of the machine followed by the port of the service. (These can be found in the docker-compose.yml)</p>
-            <p>Link all the containers together using the web interfaces, claim the server to an existing Plex Account and watch as much as you want.</p>
+            <p>This was probably the easiest installation I have done so far, way better then trying to install it manually which costed me multiple hours and a lot of headache and no results.</p>
 
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
 
@@ -75,7 +70,6 @@
                 <span class="tag">Media</span>
                 <span class="tag">DIY</span>
                 <span class="tag">Linux</span>
-                <span class="tag">Docker</span>
             </div>
 
         </article>
