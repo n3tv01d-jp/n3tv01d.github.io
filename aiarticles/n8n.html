@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building a Plex Media Server</title>
+    <title>Using N8N for Automated Scheduling</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,9 +13,9 @@
         <div class="container">
             <a href="#" class="logo">Homelabbing</a>
             <nav>
-                <a href="#">Home</a>
+                <!-- <a href="#">Home</a>
                 <a href="#">About Me</a>
-                <a href="#">Projects Archive</a>
+                <a href="#">Projects Archive</a> -->
             </nav>
         </div>
     </header>
@@ -23,7 +23,7 @@
     <!-- Hero Section (Article Banner) -->
     <section class="hero">
         <div class="container hero-content">
-            <h2>Building a Plex Media Server</h2>
+            <h2>Using N8N for Automated Scheduling</h2>
             <!-- Article Meta Info -->
             <p style="color: var(--accent-color); margin-bottom: 1rem;">Written by N3TV01D | Published September 22, 2026</p>
         </div>
@@ -38,41 +38,49 @@
         <!-- Article Content -->
         <article class="card" style="max-width: 800px; margin: 0 auto;">
 
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of One Mini PC</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of Automated Reminders</h3>
 
-            <p> A few months ago, I decided I wanted to rewatch some of the anime I used to watch as a kid. My younger sisters boyfriend had setup a Plex Server in the past which looked pretty impressive so I decided that I should do the same.</p>
+            <p> So right now I have setup an AI with a web interface and I have connected it to my Home Assistant so I can talk with it on my phone. I still want to get more productivity out of it so I decided I want to make a Telegram bot that will make appointments for me in my Google Calendar and remind me of those appointments on the day of said appointment.</p>
 
-            <p>Utilizing a few docker containers you can build your very own local container network that is able to pull and stream TV series, movies and music, all neatly packed on 1 system using docker compose.</p>
+            <p>We can setup N8N in multiple ways, we can use the cloud which eventually needs to be paid when we have more then 1 shared project. We can also use the install script that is linked on the official github or use docker to instantly setup a container. In my opinion docker seems to be the best for my use case but I don't want to simply use the <strong>docker run container</strong> command provided on the github page so let's do something else.</p>
+            
+            <p>I have made my own docker-compose.yml which can be downloaded <a href="https://github.com">here</a></p>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The First Step</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The Next Step</h3>
 
-            <p>The first step in any project is indexing what you need. We start off by installing docker using the correct method for your distribution of Linux which can be found on <a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a></p>
+            <p>After having made the docker-compose.yml we can use the <strong>sudo docker compose up -d --build</strong> command to launch the N8N instance. We make an account and are greeted by the interface. From here you can make a new project and automate nearly anything you'd like. In this case it is a Telegram Bot which does need a couple of things.</p>
 
             <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
-                <em>Once docker has been installed we need the following packages: Deluge, Prowlarr, Sonarr, Radarr, Overseerr, Plex, Sabnzbd and Lidarr (optional for music). These packages exist on the Docker Hub and are being maintained by LinuxServer lscr.io</em>
+                <em>The N8N Server needs to have port 80 and 443 forwarded, it also needs SSL Certification or else the Telegram Bot will not work.</em>
             </blockquote>
+            
+            <p>To do this (without paying money) we head to <a href="https://www.noip.com">noip.com</a> and make an account. Have the public IP of your network routed to a subdomain of your choosing. After that we install certbot on our server with <strong>sudo apt install certbot</strong> so we can get a free SSL Certification and we need nginx <strong>sudo apt install nginx</strong>to make a reverse proxy so our N8N instance can be hosted to the clear net.</p>
+            
+            <p>We need to configure certbot to use the domain name that we got from noip and we need to configure nginx as a reverse proxy to our N8N instance. The quickest guide can be found <a href="https://certbot.eff.org/instructions?ws=nginx&os=snap">here</a></p>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Installing all the packages</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Getting a Telegram Bot</h3>
 
-            <p>Now that we've indexed what we need it is time to put it all together. Using a docker-compose.yml we are able to neatly package it all together and launch it as a cluster of containers</p>
+            <p>Getting a Telegram Bot setup is pretty easy. Below are the steps for getting your own Telegram Bot</p>
 
             <ul style="margin: 1rem 0; padding-left: 2rem; color: var(--text-secondary)">
-                <li>A preview of the docker compose file can be found here: </li>
-                <li>Run the containers using the command <strong>sudo docker compose up -d --build</strong></li>
+                <li>Message the BotFather on Telegram with /start</li>
+                <li>Make a new bot with the /newbot command</li>
+                <li>Give the bot a name and a username</li>
+                <li>You will now get your Bot Token, paste this token inside the N8N Telegram Nodes</li>
             </ul>
 
-            <p>The instant I turned it on, multiple locally hosted sites became accessible on the local ip and port, for example 192.168.178.225:8686.</p>
+            <p>Configure the Google Calendar API, get a token and paste it in the Google Calendar node and hook the node to the AI Agent node. The quickest guide can be found <a href="https://n8nautomation.cloud/blog/integrate-google-calendar-n8n-tutorial-2026">here</a></p>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Next Steps</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The Final Steps</h3>
 
-            <p>Now that we have the containers up and running there is only 1 thing to do: configuring all the containers by going to the ip of the machine followed by the port of the service. (These can be found in the docker-compose.yml)</p>
-            <p>Link all the containers together using the web interfaces, claim the server to an existing Plex Account and watch as much as you want.</p>
+            <p>Get your Telegram Bot API and place it inside of the Telegram Nodes inside N8N.</p>
+            <p>If all is well you should now be able to have your local Ollama instance make appointments for you and remind you of your appointments.</p>
 
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
 
             <!-- Tags -->
             <div class="tags-container">
-                <span class="tag">Media</span>
+                <span class="tag">AI</span>
                 <span class="tag">DIY</span>
                 <span class="tag">Linux</span>
                 <span class="tag">Docker</span>
