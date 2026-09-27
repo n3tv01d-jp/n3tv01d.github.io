@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building a Plex Media Server</title>
+    <title>Building a Network Scanner with BJORN</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,9 +13,9 @@
         <div class="container">
             <a href="#" class="logo">Homelabbing</a>
             <nav>
-                <a href="#">Home</a>
+                <!-- <a href="#">Home</a>
                 <a href="#">About Me</a>
-                <a href="#">Projects Archive</a>
+                <a href="#">Projects Archive</a> -->
             </nav>
         </div>
     </header>
@@ -23,7 +23,7 @@
     <!-- Hero Section (Article Banner) -->
     <section class="hero">
         <div class="container hero-content">
-            <h2>Building a Plex Media Server</h2>
+            <h2>Building a Network Scanner with BJORN</h2>
             <!-- Article Meta Info -->
             <p style="color: var(--accent-color); margin-bottom: 1rem;">Written by N3TV01D | Published September 22, 2026</p>
         </div>
@@ -38,44 +38,42 @@
         <!-- Article Content -->
         <article class="card" style="max-width: 800px; margin: 0 auto;">
 
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">The Magic of One Mini PC</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">An Internal Automated Network Scanner</h3>
 
-            <p> A few months ago, I decided I wanted to rewatch some of the anime I used to watch as a kid. My younger sisters boyfriend had setup a Plex Server in the past which looked pretty impressive so I decided that I should do the same.</p>
+            <p>With a <a href="pwnagotchi.html">pwnagotchi</a> you can obtain pcap packets to crack the WIFI password which is pretty useful. But once inside the network it would be nice to scan all connected devices for vulnerabilities. This is where BJORN comes in. BJORN is an network scanner that checks all devices for open ports or weak passwords. It is build on the same hardware fundamentals as a pwnagotchi which makes it pretty easy to just change SD Cards and have the same device do totally different things.</p>
 
-            <p>Utilizing a few docker containers you can build your very own local container network that is able to pull and stream TV series, movies and music, all neatly packed on 1 system using docker compose.</p>
+            <p>Building this device is as easy as the pwnagotchi and only takes about a few minutes of actual work. Most of the time put in this project is wasted on writing the image to the SD Card and installing the script.</p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The First Step</h3>
 
-            <p>The first step in any project is indexing what you need. We start off by installing docker using the correct method for your distribution of Linux which can be found on <a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a></p>
+            <p>The first step is installing the 32bit version of Raspberry Pi OS Lite which can be written to the SD Card using the <a href="https://www.raspberrypi.com/software/">RPI-Imager</a>. This might take a while but it is fundamental for this project. Configure a username, password, WIFI network and ssh settings so we can access the device in the next step.</p>
 
-            <blockquote style="border-left: 4px solid var(--primary-color); padding-left: 1rem; margin: 2rem 0; color: var(--text-secondary)">
-                <em>Once docker has been installed we need the following packages: Deluge, Prowlarr, Sonarr, Radarr, Overseerr, Plex, Sabnzbd and Lidarr (optional for music). These packages exist on the Docker Hub and are being maintained by LinuxServer lscr.io</em>
-            </blockquote>
+            <p>When the installation is complete we want to give the device power and use ssh to connect into the device.</p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Installing all the packages</h3>
 
-            <p>Now that we've indexed what we need it is time to put it all together. Using a docker-compose.yml we are able to neatly package it all together and launch it as a cluster of containers</p>
+            <p>Now we want to install the BJORN script which can easily be done with the next 2 commands that we can find on the <a href="https://github.com/infinition/Bjorn">official github repository</a>.</p>
 
             <ul style="margin: 1rem 0; padding-left: 2rem; color: var(--text-secondary)">
-                <li>A preview of the docker compose file can be found here: </li>
-                <li>Run the containers using the command <strong>sudo docker compose up -d --build</strong></li>
+                <li>wget https://raw.githubusercontent.com/infinition/Bjorn/refs/heads/main/install_bjorn.sh</li>
+                <li>sudo chmod +x install_bjorn.sh && sudo ./install_bjorn.sh</li>
             </ul>
 
-            <p>The instant I turned it on, multiple locally hosted sites became accessible on the local ip and port, for example 192.168.178.225:8686.</p>
+            <p>After the installation is done we want to reboot the device. When rebooting the device the Waveshare Display will show a little Tamagotchi like Viking.</p>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Next Steps</h3>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Final Steps</h3>
 
-            <p>Now that we have the containers up and running there is only 1 thing to do: configuring all the containers by going to the ip of the machine followed by the port of the service. (These can be found in the docker-compose.yml)</p>
-            <p>Link all the containers together using the web interfaces, claim the server to an existing Plex Account and watch as much as you want.</p>
+            <p>Now we can connect it to a network and it will automatically probe all connected devices.</p>
+            <p>Any configuration changes can be made in /home/bjorn/Bjorn/config/shared_config.json</p>
 
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
 
             <!-- Tags -->
             <div class="tags-container">
-                <span class="tag">Media</span>
+                <span class="tag">Hardware</span>
                 <span class="tag">DIY</span>
                 <span class="tag">Linux</span>
-                <span class="tag">Docker</span>
+                <span class="tag">Automation</span>
             </div>
 
         </article>
