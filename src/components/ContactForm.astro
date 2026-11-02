@@ -1,0 +1,50 @@
+---
+import { formEndpoint } from '../config';
+const live = formEndpoint.length > 0;
+---
+
+<form
+  class="contact-form"
+  method="POST"
+  action={live ? formEndpoint : undefined}
+  data-contact
+  data-live={live ? 'true' : 'false'}
+>
+  <label class="field">
+    <span>Name</span>
+    <input name="name" type="text" autocomplete="name" required />
+  </label>
+  <label class="field">
+    <span>Email</span>
+    <input name="email" type="email" autocomplete="email" required />
+  </label>
+  <label class="field">
+    <span>Message</span>
+    <textarea name="message" required></textarea>
+  </label>
+  <p class="hp" aria-hidden="true">
+    <label>Company <input name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+  </p>
+  <button class="button" type="submit">Send</button>
+  {
+    live ? null : (
+      <p class="form-note">Inbox is not connected yet. Messages stay on this page until it is.</p>
+    )
+  }
+  <p class="form-status" data-status role="status"></p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact]');
+  const status = form?.querySelector<HTMLElement>('[data-status]');
+
+  form?.addEventListener('submit', (event) => {
+    if (!form || form.dataset.live === 'true') return;
+    event.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    if (status) status.textContent = 'Not sent. Connect an inbox before this form can deliver mail.';
+  });
+</script>

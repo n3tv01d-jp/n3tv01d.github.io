@@ -1,0 +1,79 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import WriteupCard from '../../components/WriteupCard.astro';
+
+export async function getStaticPaths() {
+  const writeups = await getCollection('writeups');
+  return writeups.map((writeup) => ({
+    params: { slug: writeup.id },
+    props: { writeup },
+  }));
+}
+
+interface Props {
+  writeup: CollectionEntry<'writeups'>;
+}
+
+const { writeup } = Astro.props;
+const { Content } = await render(writeup);
+const base = import.meta.env.BASE_URL;
+const related = (await getCollection('writeups'))
+  .filter((item) => item.id !== writeup.id && item.data.category === writeup.data.category)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 2);
+const tags = [writeup.data.category, ...writeup.data.tags];
+---
+
+<Base title={`${writeup.data.title} · Alex`} description={writeup.data.description}>
+  <main class="band">
+    <article class="narrow">
+      <a class="back-link" href={`${base}#writeups`}>All writeups</a>
+      <ul class="tags">
+        {tags.map((tag) => <li class="tag">{tag}</li>)}
+      </ul>
+      <h1 class="article-title">{writeup.data.title}</h1>
+      <p class="dek">{writeup.data.description}</p>
+
+      {
+        writeup.data.image ? (
+          <figure class="mast has-image">
+            <img src={writeup.data.image} alt={writeup.data.imageAlt ?? ''} />
+            <span>{writeup.data.category}</span>
+          </figure>
+        ) : (
+          <div class="mast" aria-hidden="true">
+            <span>{writeup.data.category}</span>
+          </div>
+        )
+      }
+
+      {
+        writeup.data.disclaimer && (
+          <aside class="disclaimer">
+            <strong>Only on systems I am allowed to test</strong>
+            <p>{writeup.data.disclaimer}</p>
+          </aside>
+        )
+      }
+
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+
+    {
+      related.length > 0 && (
+        <div class="container related">
+          <h2>More in {writeup.data.category}</h2>
+          <div class="related-grid">
+            {related.map((item) => (
+              <WriteupCard writeup={item} />
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </main>
+</Base>

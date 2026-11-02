@@ -1,0 +1,19 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  writeup: CollectionEntry<'writeups'>;
+}
+
+const { writeup } = Astro.props;
+const href = `${import.meta.env.BASE_URL}writeups/${writeup.id}`;
+const tags = [writeup.data.category, ...writeup.data.tags];
+---
+
+<a class="card" href={href}>
+  <ul class="tags">
+    {tags.map((tag) => <li class="tag">{tag}</li>)}
+  </ul>
+  <h3>{writeup.data.title}</h3>
+  <p>{writeup.data.description}</p>
+</a>

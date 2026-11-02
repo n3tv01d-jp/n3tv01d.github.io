@@ -1,0 +1,58 @@
+---
+const base = import.meta.env.BASE_URL;
+const items = [
+  ['Writeups', `${base}#writeups`],
+  ['Music', `${base}#music`],
+  ['About', `${base}#about`],
+  ['Contact', `${base}#contact`],
+];
+---
+
+<header class="site-header">
+  <div class="container nav-bar">
+    <a class="logo" href={base}>N3TV01D</a>
+    <nav data-nav aria-label="Sections">
+      <ul class="nav-links">
+        {
+          items.map(([label, href]) => (
+            <li>
+              <a href={href}>{label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-nav] a[href*="#"]')];
+  const sections = links
+    .map((link) => document.getElementById(link.hash.slice(1)))
+    .filter((section): section is HTMLElement => section !== null);
+
+  if (sections.length > 0) {
+    const visible = new Set<HTMLElement>();
+    const mark = () => {
+      for (const link of links) link.classList.remove('is-active');
+      const current = [...visible].sort(
+        (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
+      )[0];
+      if (!current) return;
+      document.querySelector<HTMLAnchorElement>(`[data-nav] a[href$="#${current.id}"]`)?.classList.add('is-active');
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target as HTMLElement);
+          else visible.delete(entry.target as HTMLElement);
+        }
+        mark();
+      },
+      { rootMargin: '-20% 0px -55% 0px', threshold: 0 },
+    );
+
+    for (const section of sections) observer.observe(section);
+  }
+</script>
