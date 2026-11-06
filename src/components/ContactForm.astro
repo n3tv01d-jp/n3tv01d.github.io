@@ -22,29 +22,68 @@ const live = formEndpoint.length > 0;
     <span>Message</span>
     <textarea name="message" required></textarea>
   </label>
+  <input type="hidden" name="_subject" value="New message from n3tv01d site" />
   <p class="hp" aria-hidden="true">
     <label>Company <input name="_gotcha" tabindex="-1" autocomplete="off" /></label>
   </p>
-  <button class="button" type="submit">Send</button>
+  <button class="button" type="submit" data-submit>Send</button>
   {
     live ? null : (
       <p class="form-note">Inbox is not connected yet. Messages stay on this page until it is.</p>
     )
   }
-  <p class="form-status" data-status role="status"></p>
+  <p class="form-status" data-status role="status" aria-live="polite"></p>
 </form>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact]');
   const status = form?.querySelector<HTMLElement>('[data-status]');
+  const submit = form?.querySelector<HTMLButtonElement>('[data-submit]');
 
-  form?.addEventListener('submit', (event) => {
-    if (!form || form.dataset.live === 'true') return;
+  const say = (text: string) => {
+    if (status) status.textContent = text;
+  };
+
+  form?.addEventListener('submit', async (event) => {
+    if (!form) return;
     event.preventDefault();
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
-    if (status) status.textContent = 'Not sent. Connect an inbox before this form can deliver mail.';
+
+    if (form.dataset.live !== 'true') {
+      say('Not sent. Connect an inbox before this form can deliver mail.');
+      return;
+    }
+
+    if (submit) submit.disabled = true;
+    say('Sending…');
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+
+      if (response.ok) {
+        form.reset();
+        say('Thanks! Your message was sent. I will get back to you soon.');
+        return;
+      }
+
+      const data = await response.json().catch(() => null);
+      const errors: { message?: string }[] = data?.errors ?? [];
+      say(
+        errors.length
+          ? errors.map((e) => e.message).filter(Boolean).join(' ')
+          : 'Something went wrong. Please try again in a moment.',
+      );
+    } catch {
+      say('Network error. Check your connection and try again.');
+    } finally {
+      if (submit) submit.disabled = false;
+    }
   });
 </script>

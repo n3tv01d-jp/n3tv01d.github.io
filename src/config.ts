@@ -1,5 +1,5 @@
 /** Set this to a Formspree endpoint when the inbox is ready. The address stays off the page. */
-export const formEndpoint = '';
+export const formEndpoint = 'https://formspree.io/f/xeaadyjz';
 
 export const spotify = {
   artistUrl: 'https://open.spotify.com/artist/4RFs1i8HgTWQzDaWbtwOg4',
