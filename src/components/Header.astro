@@ -26,10 +26,69 @@ const items = [
         }
       </ul>
     </nav>
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="nav-drawer"
+      data-nav-toggle
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
 </header>
 
+<!-- Mobile side drawer: lives outside the header because the header's
+     backdrop-filter/overflow would trap a fixed-position child. -->
+<div class="nav-drawer" id="nav-drawer" data-drawer>
+  <div class="nav-drawer-backdrop" data-drawer-close></div>
+  <nav class="nav-drawer-panel" data-nav aria-label="Sections">
+    <button class="nav-drawer-close" type="button" aria-label="Close menu" data-drawer-close>&times;</button>
+    <ul class="nav-drawer-links">
+      {
+        items.map(([label, href]) => (
+          <li>
+            <a href={href}>{label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</div>
+
 <script>
+  // Mobile hamburger menu / side drawer
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  if (toggle && drawer) {
+    const mobile = window.matchMedia('(max-width: 640px)');
+    const setOpen = (open: boolean) => {
+      drawer.classList.toggle('is-open', open);
+      document.body.classList.toggle('drawer-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      drawer.inert = !open;
+      if (open) drawer.querySelector<HTMLElement>('.nav-drawer-links a')?.focus();
+    };
+    drawer.inert = true;
+    toggle.addEventListener('click', () => setOpen(!drawer.classList.contains('is-open')));
+    drawer.querySelectorAll('[data-drawer-close], a').forEach((el) =>
+      el.addEventListener('click', () => setOpen(false)),
+    );
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && drawer.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    mobile.addEventListener('change', (event) => {
+      if (!event.matches) setOpen(false);
+    });
+  }
+
   // Japanese greeting based on the visitor's local time
   const greeting = document.querySelector<HTMLElement>('[data-greeting]');
   if (greeting) {
@@ -133,7 +192,9 @@ const items = [
         (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
       )[0];
       if (!current) return;
-      document.querySelector<HTMLAnchorElement>(`[data-nav] a[href$="#${current.id}"]`)?.classList.add('is-active');
+      document
+        .querySelectorAll<HTMLAnchorElement>(`[data-nav] a[href$="#${current.id}"]`)
+        .forEach((link) => link.classList.add('is-active'));
     };
 
     const observer = new IntersectionObserver(
