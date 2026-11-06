@@ -5,7 +5,208 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="container">
-    <p>© {year} Alex</p>
+    <p>
+      <span class="egg-plain">© {year} Alex</span>
+      <button type="button" class="egg-trigger" aria-haspopup="dialog">© {year} Alex</button>
+    </p>
     <p><a href={githubUrl}>GitHub</a></p>
   </div>
 </footer>
+
+<dialog class="egg-window" aria-label="Terminal">
+  <div class="egg-titlebar">
+    <span>~/alex</span>
+    <button type="button" class="egg-close" aria-label="Close">×</button>
+  </div>
+  <div class="egg-body">
+    <div class="egg-prompt-view">
+      <label class="egg-bar">
+        <span aria-hidden="true">&gt;</span>
+        <input type="text" class="egg-input" autocomplete="off" spellcheck="false" aria-label="Input" />
+      </label>
+    </div>
+    <div class="egg-snake-view" hidden>
+      <div class="egg-score">score <span class="egg-score-value">0</span></div>
+      <canvas class="egg-canvas" width="320" height="320"></canvas>
+      <p class="egg-status">Arrow keys to move</p>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const desktop = window.matchMedia('(min-width: 641px) and (hover: hover) and (pointer: fine)');
+  const trigger = document.querySelector<HTMLButtonElement>('.egg-trigger');
+  const win = document.querySelector<HTMLDialogElement>('.egg-window');
+
+  if (trigger && win) {
+    const closeBtn = win.querySelector<HTMLButtonElement>('.egg-close')!;
+    const input = win.querySelector<HTMLInputElement>('.egg-input')!;
+    const promptView = win.querySelector<HTMLElement>('.egg-prompt-view')!;
+    const snakeView = win.querySelector<HTMLElement>('.egg-snake-view')!;
+    const canvas = win.querySelector<HTMLCanvasElement>('.egg-canvas')!;
+    const scoreEl = win.querySelector<HTMLElement>('.egg-score-value')!;
+    const statusEl = win.querySelector<HTMLElement>('.egg-status')!;
+    const ctx = canvas.getContext('2d')!;
+
+    const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
+    let progress = 0;
+
+    const GRID = 20;
+    const CELL = canvas.width / GRID;
+    const STEP_MS = 110;
+    type Point = { x: number; y: number };
+    const dirs: Record<string, Point> = {
+      ArrowUp: { x: 0, y: -1 },
+      ArrowDown: { x: 0, y: 1 },
+      ArrowLeft: { x: -1, y: 0 },
+      ArrowRight: { x: 1, y: 0 },
+    };
+
+    let snake: Point[] = [];
+    let dir: Point = dirs.ArrowRight;
+    let queue: Point[] = [];
+    let food: Point = { x: 0, y: 0 };
+    let score = 0;
+    let timer: number | undefined;
+    let playing = false;
+    let over = false;
+
+    const css = getComputedStyle(document.documentElement);
+    const color = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
+    const colors = {
+      bg: color('--bg', '#0f172a'),
+      line: color('--line', '#334155'),
+      snake: color('--rose', '#fb7185'),
+      head: color('--text', '#f8fafc'),
+      food: color('--red', '#dc2626'),
+    };
+
+    const placeFood = () => {
+      do {
+        food = { x: Math.floor(Math.random() * GRID), y: Math.floor(Math.random() * GRID) };
+      } while (snake.some((s) => s.x === food.x && s.y === food.y));
+    };
+
+    const draw = () => {
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = colors.line;
+      ctx.globalAlpha = 0.35;
+      for (let i = 1; i < GRID; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * CELL + 0.5, 0);
+        ctx.lineTo(i * CELL + 0.5, canvas.height);
+        ctx.moveTo(0, i * CELL + 0.5);
+        ctx.lineTo(canvas.width, i * CELL + 0.5);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = colors.food;
+      ctx.fillRect(food.x * CELL + 3, food.y * CELL + 3, CELL - 6, CELL - 6);
+      snake.forEach((s, i) => {
+        ctx.fillStyle = i === 0 ? colors.head : colors.snake;
+        ctx.fillRect(s.x * CELL + 1, s.y * CELL + 1, CELL - 2, CELL - 2);
+      });
+    };
+
+    const stopLoop = () => {
+      if (timer !== undefined) window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    const tick = () => {
+      if (queue.length) dir = queue.shift()!;
+      const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+      const eating = head.x === food.x && head.y === food.y;
+      const body = eating ? snake : snake.slice(0, -1);
+      const hitWall = head.x < 0 || head.y < 0 || head.x >= GRID || head.y >= GRID;
+      if (hitWall || body.some((s) => s.x === head.x && s.y === head.y)) {
+        stopLoop();
+        over = true;
+        statusEl.textContent = 'Game over. Press Space to play again';
+        return;
+      }
+      snake = [head, ...body];
+      if (eating) {
+        score++;
+        scoreEl.textContent = String(score);
+        placeFood();
+      }
+      draw();
+    };
+
+    const startGame = () => {
+      stopLoop();
+      snake = [
+        { x: 8, y: 10 },
+        { x: 7, y: 10 },
+        { x: 6, y: 10 },
+      ];
+      dir = dirs.ArrowRight;
+      queue = [];
+      score = 0;
+      over = false;
+      scoreEl.textContent = '0';
+      statusEl.textContent = 'Arrow keys to move';
+      placeFood();
+      draw();
+      timer = window.setInterval(tick, STEP_MS);
+    };
+
+    const showSnake = () => {
+      playing = true;
+      promptView.hidden = true;
+      snakeView.hidden = false;
+      input.blur();
+      startGame();
+    };
+
+    const reset = () => {
+      stopLoop();
+      playing = false;
+      progress = 0;
+      input.value = '';
+      promptView.hidden = false;
+      snakeView.hidden = true;
+    };
+
+    const open = () => {
+      if (!desktop.matches) return;
+      reset();
+      win.showModal();
+      input.focus();
+    };
+
+    trigger.addEventListener('click', open);
+    closeBtn.addEventListener('click', () => win.close());
+    win.addEventListener('close', reset);
+    win.addEventListener('click', (e) => {
+      if (e.target === win) win.close();
+    });
+    desktop.addEventListener('change', () => {
+      if (!desktop.matches && win.open) win.close();
+    });
+
+    win.addEventListener('keydown', (e) => {
+      if (!playing) {
+        if (!(e.key in dirs)) return;
+        e.preventDefault();
+        if (e.key === konami[progress]) progress++;
+        else progress = e.key === konami[0] ? 1 : 0;
+        if (progress === konami.length) showSnake();
+        return;
+      }
+
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        if (over) startGame();
+        return;
+      }
+      const next = dirs[e.key];
+      if (!next) return;
+      e.preventDefault();
+      const last = queue.length ? queue[queue.length - 1] : dir;
+      if (queue.length < 3 && next.x !== -last.x && next.y !== -last.y) queue.push(next);
+    });
+  }
+</script>

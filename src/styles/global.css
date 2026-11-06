@@ -725,6 +725,126 @@ a {
   color: var(--muted);
 }
 
+.egg-trigger {
+  display: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.egg-trigger:hover,
+.egg-trigger:focus-visible {
+  color: var(--rose);
+}
+
+@media (min-width: 641px) and (hover: hover) and (pointer: fine) {
+  .egg-plain {
+    display: none;
+  }
+
+  .egg-trigger {
+    display: inline;
+  }
+}
+
+.egg-window {
+  width: min(380px, calc(100vw - 2rem));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-family: var(--mono);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.egg-window::backdrop {
+  background: rgba(2, 6, 23, 0.6);
+}
+
+.egg-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-raise);
+  color: var(--faint);
+  font-size: 0.8rem;
+}
+
+.egg-close {
+  border: 0;
+  background: none;
+  color: var(--faint);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.egg-close:hover {
+  color: var(--rose);
+}
+
+.egg-body {
+  padding: 1rem;
+}
+
+
+.egg-status {
+  margin: 0 0 0.75rem;
+  color: var(--faint);
+  font-size: 0.8rem;
+}
+
+.egg-status {
+  margin: 0.6rem 0 0;
+  text-align: center;
+}
+
+.egg-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--rose);
+}
+
+.egg-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.egg-score {
+  margin-bottom: 0.5rem;
+  color: var(--faint);
+  font-size: 0.8rem;
+}
+
+.egg-score-value {
+  color: var(--rose);
+}
+
+.egg-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  image-rendering: pixelated;
+}
+
 .back-link {
   display: inline-block;
   margin-bottom: 1rem;
