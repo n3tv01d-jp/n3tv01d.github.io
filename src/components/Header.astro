@@ -11,7 +11,10 @@ const items = [
 <header class="site-header">
   <canvas class="header-matrix" data-matrix aria-hidden="true"></canvas>
   <div class="container nav-bar">
-    <a class="logo" href={base}>N3TV01D</a>
+    <div class="nav-left">
+      <a class="logo" href={base}>N3TV01D</a>
+      <span class="greeting" data-greeting lang="ja"></span>
+    </div>
     <nav data-nav aria-label="Sections">
       <ul class="nav-links">
         {
@@ -27,6 +30,27 @@ const items = [
 </header>
 
 <script>
+  // Japanese greeting based on the visitor's local time
+  const greeting = document.querySelector<HTMLElement>('[data-greeting]');
+  if (greeting) {
+    const greetings: [number, string, string][] = [
+      // [start hour, Japanese, English tooltip]
+      [5, 'おはようございます', 'Good morning'],
+      [11, 'こんにちは', 'Good afternoon'],
+      [17, 'こんばんは', 'Good evening'],
+      [22, 'おやすみなさい', 'Good night'],
+    ];
+    const update = () => {
+      const hour = new Date().getHours();
+      const [, ja, en] =
+        [...greetings].reverse().find(([start]) => hour >= start) ?? greetings[greetings.length - 1];
+      greeting.textContent = ja;
+      greeting.title = en;
+    };
+    update();
+    setInterval(update, 60_000);
+  }
+
   // Matrix rain inside the header bar
   const canvas = document.querySelector<HTMLCanvasElement>('[data-matrix]');
   const ctx = canvas?.getContext('2d');

@@ -103,6 +103,27 @@ a {
   font-size: 0.95rem;
 }
 
+.nav-left {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.greeting {
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.greeting:not(:empty)::before {
+  content: "//";
+  margin-right: 0.6rem;
+  color: var(--faint);
+  font-family: var(--mono);
+}
+
 .nav-links {
   display: flex;
   gap: 1.4rem;
