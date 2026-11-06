@@ -71,9 +71,23 @@ a {
   background: rgba(15, 23, 42, 0.82);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.header-matrix {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.28;
+  pointer-events: none;
+  /* soften the rain behind the links so text stays readable */
+  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.6) 100%);
 }
 
 .nav-bar {
+  position: relative;
+  z-index: 1;
   height: 100%;
   display: flex;
   align-items: center;

@@ -9,6 +9,7 @@ const items = [
 ---
 
 <header class="site-header">
+  <canvas class="header-matrix" data-matrix aria-hidden="true"></canvas>
   <div class="container nav-bar">
     <a class="logo" href={base}>N3TV01D</a>
     <nav data-nav aria-label="Sections">
@@ -26,6 +27,75 @@ const items = [
 </header>
 
 <script>
+  // Matrix rain inside the header bar
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-matrix]');
+  const ctx = canvas?.getContext('2d');
+  if (canvas && ctx) {
+    const glyphs = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF<>/$#';
+    const color = '251, 113, 133'; // --rose as RGB
+    const size = 12;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let drops: number[] = [];
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let last = 0;
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.font = `${size}px "IBM Plex Mono", monospace`;
+      const columns = Math.ceil(width / size);
+      drops = Array.from({ length: columns }, (_, i) => drops[i] ?? Math.random() * -20);
+    };
+
+    const draw = () => {
+      // Fade previous frame to leave trails (destination-out keeps the canvas transparent)
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.fillRect(0, 0, width, height);
+      ctx.globalCompositeOperation = 'source-over';
+
+      for (let i = 0; i < drops.length; i++) {
+        const y = drops[i] * size;
+        const char = glyphs[Math.floor(Math.random() * glyphs.length)];
+        ctx.fillStyle = Math.random() > 0.95 ? 'rgba(255, 255, 255, 0.9)' : `rgba(${color}, 0.85)`;
+        ctx.fillText(char, i * size, y);
+        if (y > height && Math.random() > 0.9) drops[i] = Math.random() * -10;
+        drops[i] += 1;
+      }
+    };
+
+    const loop = (time: number) => {
+      frame = requestAnimationFrame(loop);
+      if (time - last < 70) return; // ~14 fps feels right for matrix rain
+      last = time;
+      draw();
+    };
+
+    const start = () => {
+      cancelAnimationFrame(frame);
+      if (reduceMotion.matches) {
+        for (let i = 0; i < 12; i++) draw(); // single static frame
+      } else {
+        frame = requestAnimationFrame(loop);
+      }
+    };
+
+    resize();
+    start();
+    new ResizeObserver(resize).observe(canvas);
+    reduceMotion.addEventListener('change', start);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelAnimationFrame(frame);
+      else start();
+    });
+  }
+
   const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-nav] a[href*="#"]')];
   const sections = links
     .map((link) => document.getElementById(link.hash.slice(1)))
