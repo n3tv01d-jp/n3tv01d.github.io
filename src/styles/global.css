@@ -301,6 +301,73 @@ a {
   list-style: none;
 }
 
+.writeup-grid > li[hidden] {
+  display: none;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.pager[hidden] {
+  display: none;
+}
+
+.pager-pages {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pager-step,
+.pager-num {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.pager-step:hover:not(:disabled),
+.pager-num:hover {
+  color: var(--rose);
+  border-color: rgba(220, 38, 38, 0.55);
+}
+
+.pager-num[aria-current="page"] {
+  color: var(--text);
+  background: rgba(220, 38, 38, 0.18);
+  border-color: var(--red);
+}
+
+.pager-step:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pager-count {
+  flex-basis: 100%;
+  margin: 0.25rem 0 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
 #writeups {
   position: relative;
   overflow: hidden;

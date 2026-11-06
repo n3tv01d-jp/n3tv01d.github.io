@@ -48,9 +48,15 @@ const writeups = (await getCollection('writeups')).sort((a, b) => a.data.order -
     <section class="band" id="writeups">
       <div class="container">
         <h2 class="sr-only">Writeups</h2>
-        <ul class="writeup-grid">
+        <ul class="writeup-grid" id="writeup-list">
           {writeups.map((writeup) => <li><WriteupCard writeup={writeup} /></li>)}
         </ul>
+        <nav class="pager" aria-label="Writeup pages" hidden>
+          <button type="button" class="pager-step" data-pager="prev" aria-label="Previous page">&larr;</button>
+          <ol class="pager-pages"></ol>
+          <button type="button" class="pager-step" data-pager="next" aria-label="Next page">&rarr;</button>
+          <p class="pager-count" aria-live="polite"></p>
+        </nav>
       </div>
     </section>
 
@@ -135,6 +141,72 @@ const writeups = (await getCollection('writeups')).sort((a, b) => a.data.order -
 
 <script>
   const section = document.getElementById('writeups');
+
+  const list = document.getElementById('writeup-list');
+  const pager = section?.querySelector<HTMLElement>('.pager');
+
+  if (list && pager) {
+    const items = Array.from(list.children) as HTMLElement[];
+    const pagesList = pager.querySelector<HTMLOListElement>('.pager-pages')!;
+    const prev = pager.querySelector<HTMLButtonElement>('[data-pager="prev"]')!;
+    const next = pager.querySelector<HTMLButtonElement>('[data-pager="next"]')!;
+    const count = pager.querySelector<HTMLElement>('.pager-count')!;
+    const phone = window.matchMedia('(max-width: 640px)');
+
+    let page = 0;
+    const perPage = () => (phone.matches ? 5 : 12);
+    const totalPages = () => Math.max(1, Math.ceil(items.length / perPage()));
+
+    const render = () => {
+      const size = perPage();
+      const total = totalPages();
+      page = Math.min(page, total - 1);
+
+      items.forEach((item, index) => {
+        item.hidden = Math.floor(index / size) !== page;
+      });
+
+      pager.hidden = total <= 1;
+      prev.disabled = page === 0;
+      next.disabled = page === total - 1;
+
+      pagesList.replaceChildren(
+        ...Array.from({ length: total }, (_, index) => {
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'pager-num';
+          button.textContent = String(index + 1);
+          button.setAttribute('aria-label', `Page ${index + 1}`);
+          if (index === page) button.setAttribute('aria-current', 'page');
+          button.addEventListener('click', () => goTo(index));
+          li.append(button);
+          return li;
+        }),
+      );
+
+      const first = page * size + 1;
+      const last = Math.min(items.length, first + size - 1);
+      count.textContent = `${first}–${last} of ${items.length}`;
+    };
+
+    const goTo = (target: number) => {
+      if (target === page) return;
+      page = target;
+      render();
+      const top = section!.getBoundingClientRect().top;
+      if (top < 0) section!.scrollIntoView({ block: 'start' });
+    };
+
+    prev.addEventListener('click', () => goTo(page - 1));
+    next.addEventListener('click', () => goTo(page + 1));
+    phone.addEventListener('change', () => {
+      page = 0;
+      render();
+    });
+
+    render();
+  }
 
   if (section) {
     const moveLight = (event: PointerEvent) => {
